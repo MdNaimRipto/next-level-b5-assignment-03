@@ -17,12 +17,13 @@ const getAllBooks = async (options: IBookFilter): Promise<IBooks[]> => {
   return result;
 };
 
-// get all books
+// get book by id
 const getBookById = async (bookId: string): Promise<IBooks | null> => {
   const result = await Books.findOne({ _id: bookId });
   return result;
 };
 
+// update book
 const updateBook = async (
   payload: Partial<IBooks>,
   bookId: string,
@@ -34,6 +35,7 @@ const updateBook = async (
   return result;
 };
 
+// delete book
 const deleteBook = async (bookId: string): Promise<null> => {
   await Books.findOneAndDelete(
     { _id: bookId },

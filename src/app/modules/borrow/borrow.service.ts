@@ -52,14 +52,14 @@ const getBorrowedBooks = async () => {
     },
     {
       $lookup: {
-        from: "books", // collection name in MongoDB (usually lowercase plural)
+        from: "books",
         localField: "_id",
         foreignField: "_id",
         as: "book",
       },
     },
     {
-      $unwind: "$book", // convert array from $lookup into object
+      $unwind: "$book",
     },
     {
       $project: {

@@ -16,7 +16,7 @@ const borrowBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// Get All Books
+// Get All Borrowed Books
 const getBorrowedBooks = catchAsync(async (req: Request, res: Response) => {
   const result = await BorrowService.getBorrowedBooks();
 

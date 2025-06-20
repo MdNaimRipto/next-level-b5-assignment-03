@@ -13,7 +13,7 @@ const booksSchema = new Schema<IBooks, Model<IBooks>, IBooksMethods>(
       unique: [true, "Isbn number must have to be unique"],
       validate: {
         validator: function (v: string) {
-          return /^[0-9]{13}$/.test(v); // Simple ISBN-13 validation
+          return /^[0-9]{13}$/.test(v); // ISBN-13 validation
         },
         message: props => `${props.value} is not a valid 13-digit ISBN!`,
       },
@@ -37,6 +37,7 @@ const booksSchema = new Schema<IBooks, Model<IBooks>, IBooksMethods>(
   {
     timestamps: true,
     versionKey: false,
+    strict: true,
   },
 );
 
