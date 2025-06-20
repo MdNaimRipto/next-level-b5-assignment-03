@@ -15,3 +15,9 @@ export interface IBooks {
   copies: number;
   available: boolean;
 }
+
+export interface IBookFilter {
+  filter?: string;
+  sort?: "asc" | "desc";
+  limit?: number;
+}

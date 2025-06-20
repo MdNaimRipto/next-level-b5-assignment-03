@@ -21,9 +21,14 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   else if (error instanceof ApiError) {
     statusCode = error?.statusCode;
     message = error?.message;
+    error = {
+      message: error.message,
+      statusCode: error.statusCode,
+    };
   } //
   else if (error instanceof Error) {
     message = error?.message;
+    console.log({ error });
   }
 
   res.status(statusCode).send({
