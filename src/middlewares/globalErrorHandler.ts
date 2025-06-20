@@ -2,6 +2,7 @@
 import { ErrorRequestHandler } from "express";
 import config from "../config/config";
 import ApiError from "../errors/ApiError";
+import validationError from "../errors/validationError";
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   config.node_env === "development"
@@ -11,7 +12,13 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   let statusCode = 500;
   let message = "Internal Server Error!";
 
-  if (error instanceof ApiError) {
+  if (error?.name === "ValidationError") {
+    const simplifiedError = validationError(error);
+    statusCode = 400;
+    message = simplifiedError.message;
+    error = simplifiedError.error;
+  } //
+  else if (error instanceof ApiError) {
     statusCode = error?.statusCode;
     message = error?.message;
   } //
@@ -21,9 +28,8 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
 
   res.status(statusCode).send({
     success: false,
-    statusCode,
     message,
-    stack: config.node_env === "production" ? undefined : error?.stack,
+    error,
   });
 };
 
