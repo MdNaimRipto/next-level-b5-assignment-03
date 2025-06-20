@@ -1,3 +1,5 @@
+import { Document } from "mongoose";
+
 export type BookGenreEnums =
   | "FICTION"
   | "NON_FICTION"
@@ -20,4 +22,10 @@ export interface IBookFilter {
   filter?: string;
   sort?: "asc" | "desc";
   limit?: number;
+}
+
+export interface IBooksDocument extends IBooks, IBooksMethods, Document {}
+
+export interface IBooksMethods {
+  decreaseCopies(quantity: number): Promise<void>;
 }

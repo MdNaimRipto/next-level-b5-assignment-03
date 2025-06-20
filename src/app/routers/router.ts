@@ -1,5 +1,6 @@
 import express from "express";
 import { BooksRouter } from "../modules/books/books.router";
+import { BorrowRouter } from "../modules/borrow/borrow.router";
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ const routes = [
   },
   {
     path: "/borrow",
-    route: BooksRouter,
+    route: BorrowRouter,
   },
 ];
 

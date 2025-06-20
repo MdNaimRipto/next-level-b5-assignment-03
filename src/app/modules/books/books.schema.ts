@@ -1,8 +1,8 @@
-import { model, Schema } from "mongoose";
-import { IBooks } from "./books.interface";
+import { Model, model, Schema } from "mongoose";
+import { IBooks, IBooksMethods } from "./books.interface";
 import { bookGenreEnums } from "./books.constant";
 
-const booksSchema = new Schema<IBooks>(
+const booksSchema = new Schema<IBooks, Model<IBooks>, IBooksMethods>(
   {
     title: { type: String, required: true },
     author: { type: String, required: true },
@@ -37,6 +37,19 @@ const booksSchema = new Schema<IBooks>(
   {
     timestamps: true,
     versionKey: false,
+  },
+);
+
+booksSchema.method(
+  "decreaseCopies",
+  async function (quantity: number): Promise<void> {
+    if (this.copies - quantity <= 0) {
+      this.copies = 0;
+      this.available = false;
+    } else {
+      this.copies -= quantity;
+    }
+    await this.save();
   },
 );
 

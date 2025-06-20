@@ -1,9 +1,5 @@
-import { Error } from "mongoose";
 import { IBookFilter, IBooks } from "./books.interface";
 import { Books } from "./books.schema";
-// import ApiError from "../../../errors/ApiError";
-// import httpStatus from "http-status";
-// import { bookGenreEnums } from "./books.constant";
 
 // upload book
 const uploadBook = async (payload: IBooks): Promise<IBooks | null> => {
