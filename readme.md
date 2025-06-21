@@ -2,7 +2,9 @@
 
 ### Project Type: Backend Application
 
-### Project Link:
+### Project Link: https://book-management-backend-ac-03.vercel.app/
+
+### Video Link: https://www.youtube.com/watch?v=A0_MfZZQYfA
 
 ### Project Stacks:
 

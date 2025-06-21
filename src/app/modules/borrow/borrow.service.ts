@@ -7,6 +7,13 @@ import { BorrowedBooks } from "./borrow.schema";
 
 // Borrow Book
 const borrowBook = async (payload: IBorrow): Promise<IBorrow> => {
+  if (payload.quantity <= 0) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `Invalid request. Amount must have to be 1 or more.`,
+    );
+  }
+
   const currentBookCount = (await Books.findOne({
     _id: payload.book,
   })) as IBooksDocument;
@@ -47,7 +54,7 @@ const getBorrowedBooks = async () => {
     {
       $group: {
         _id: "$book",
-        totalQuantity: { $sum: 1 },
+        totalQuantity: { $sum: "$quantity" },
       },
     },
     {

@@ -19,6 +19,9 @@ const http_status_1 = __importDefault(require("http-status"));
 const borrow_schema_1 = require("./borrow.schema");
 // Borrow Book
 const borrowBook = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    if (payload.quantity <= 0) {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, `Invalid request. Amount must have to be 1 or more.`);
+    }
     const currentBookCount = (yield books_schema_1.Books.findOne({
         _id: payload.book,
     }));
@@ -44,7 +47,7 @@ const getBorrowedBooks = () => __awaiter(void 0, void 0, void 0, function* () {
         {
             $group: {
                 _id: "$book",
-                totalQuantity: { $sum: 1 },
+                totalQuantity: { $sum: "$quantity" },
             },
         },
         {
