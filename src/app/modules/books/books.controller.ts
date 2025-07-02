@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import catchAsync from "../../../util/catchAsync";
 import { BooksService } from "./books.service";
 import sendResponse from "../../../util/sendResponse";
+import { BooksFilterableFields } from "./books.constant";
+import pick from "../../../shared/shared";
+import { paginationFields } from "../../../constants/pagination.constant";
 
 // Upload Book
 const uploadBook = catchAsync(async (req: Request, res: Response) => {
@@ -18,13 +21,10 @@ const uploadBook = catchAsync(async (req: Request, res: Response) => {
 
 // Get All Books
 const getAllBooks = catchAsync(async (req: Request, res: Response) => {
-  const { filter, sort, limit } = req.query;
+  const filters = pick(req.query, BooksFilterableFields);
+  const options = pick(req.query, paginationFields);
 
-  const result = await BooksService.getAllBooks({
-    filter: filter as any,
-    limit: limit as any,
-    sort: sort as any,
-  });
+  const result = await BooksService.getAllBooks(filters, options);
 
   sendResponse(res, {
     success: true,

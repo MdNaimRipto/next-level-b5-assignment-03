@@ -31,7 +31,7 @@ app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 }));
 //* Main endpoint
-app.use("/api", router_1.Routers);
+app.use("/v1.0.0/apis", router_1.Routers);
 //* Global error Handler
 app.use(globalErrorHandler_1.default);
 //* Path Not Found Error Handler

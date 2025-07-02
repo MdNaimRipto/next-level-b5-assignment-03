@@ -1,5 +1,11 @@
-import { IBookFilter, IBooks } from "./books.interface";
+import { SortOrder } from "mongoose";
+import {
+  IGenericPaginationResponse,
+  IPaginationOptions,
+} from "../../../interface/pagination";
+import { IBookFilters, IBooks } from "./books.interface";
 import { Books } from "./books.schema";
+import { calculatePaginationFunction } from "../../../helpers/paginationHelpers";
 
 // upload book
 const uploadBook = async (payload: IBooks): Promise<IBooks | null> => {
@@ -8,13 +14,59 @@ const uploadBook = async (payload: IBooks): Promise<IBooks | null> => {
 };
 
 // get all books
-const getAllBooks = async (options: IBookFilter): Promise<IBooks[]> => {
-  const { filter, limit, sort } = options;
+const getAllBooks = async (
+  filters: IBookFilters,
+  paginationOptions: IPaginationOptions,
+): Promise<IGenericPaginationResponse<IBooks[]>> => {
+  const { ...filterData } = filters;
 
-  const result = await Books.find(filter ? { genre: filter } : {})
-    .sort(sort && sort === "asc" ? { createdAt: 1 } : { createdAt: -1 })
-    .limit(limit ? limit : 10);
-  return result;
+  const andConditions: string | any[] = [];
+
+  //
+  if (Object.keys(filterData).length) {
+    const filterConditions: { [x: string]: string }[] = [];
+
+    Object.entries(filterData).forEach(([field, value]) => {
+      filterConditions.push({ [field]: value });
+    });
+
+    andConditions.push({
+      $and: filterConditions,
+    });
+  }
+  //
+
+  const { page, limit, skip, sortBy, sortOrder } =
+    calculatePaginationFunction(paginationOptions);
+
+  const sortConditions: { [key: string]: SortOrder } = {};
+
+  if (sortBy && sortOrder) {
+    sortConditions[sortBy] = sortOrder;
+  }
+  //
+  const checkAndCondition =
+    andConditions?.length > 0 ? { $and: andConditions } : {};
+
+  const query = {
+    ...checkAndCondition,
+  };
+
+  const books = await Books.find(query)
+    .sort(sortConditions)
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Books.countDocuments({});
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: books,
+  };
 };
 
 // get book by id

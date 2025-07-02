@@ -7,11 +7,14 @@ const http_status_1 = __importDefault(require("http-status"));
 const pathNotFoundErrorHandler = (req, res) => {
     res.status(http_status_1.default.NOT_FOUND).send({
         success: false,
-        message: `Cannot get requested '${req.url}' path`,
-        error: {
-            statusCode: http_status_1.default.NOT_FOUND,
-            message: `Cannot get requested '${req.url}' path`,
-        },
+        statusCode: http_status_1.default.NOT_FOUND,
+        message: `Cannot get Path:'${req.url}'`,
+        errorMessages: [
+            {
+                path: `${req.url}`,
+                message: `Cannot get Path:'${req.url}'`,
+            },
+        ],
     });
 };
 exports.default = pathNotFoundErrorHandler;

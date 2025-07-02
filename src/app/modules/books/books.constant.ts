@@ -8,3 +8,5 @@ export const bookGenreEnums: BookGenreEnums[] = [
   "NON_FICTION",
   "SCIENCE",
 ];
+
+export const BooksFilterableFields = ["genre"];

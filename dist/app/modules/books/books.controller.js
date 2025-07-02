@@ -27,6 +27,9 @@ exports.BooksController = void 0;
 const catchAsync_1 = __importDefault(require("../../../util/catchAsync"));
 const books_service_1 = require("./books.service");
 const sendResponse_1 = __importDefault(require("../../../util/sendResponse"));
+const books_constant_1 = require("./books.constant");
+const shared_1 = __importDefault(require("../../../shared/shared"));
+const pagination_constant_1 = require("../../../constants/pagination.constant");
 // Upload Book
 const uploadBook = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const payload = __rest(req.body, []);
@@ -39,12 +42,9 @@ const uploadBook = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 }));
 // Get All Books
 const getAllBooks = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { filter, sort, limit } = req.query;
-    const result = yield books_service_1.BooksService.getAllBooks({
-        filter: filter,
-        limit: limit,
-        sort: sort,
-    });
+    const filters = (0, shared_1.default)(req.query, books_constant_1.BooksFilterableFields);
+    const options = (0, shared_1.default)(req.query, pagination_constant_1.paginationFields);
+    const result = yield books_service_1.BooksService.getAllBooks(filters, options);
     (0, sendResponse_1.default)(res, {
         success: true,
         message: "Books retrieved successfully",

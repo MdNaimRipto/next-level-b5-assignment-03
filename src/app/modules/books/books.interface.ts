@@ -18,10 +18,8 @@ export interface IBooks {
   available: boolean;
 }
 
-export interface IBookFilter {
-  filter?: string;
-  sort?: "asc" | "desc";
-  limit?: number;
+export interface IBookFilters {
+  genre?: string;
 }
 
 export interface IBooksDocument extends IBooks, IBooksMethods, Document {}

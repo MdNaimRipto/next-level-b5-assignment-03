@@ -1,16 +1,22 @@
 import express from "express";
 import { BooksController } from "./books.controller";
+import zodValidationRequest from "../../../middlewares/zodValidationRequest";
+import { BooksValidation } from "./books.validation";
 
 const router = express.Router();
 
-router.post("/", BooksController.uploadBook);
+router.post(
+  "/uploadBook",
+  zodValidationRequest(BooksValidation.booksZodSchema),
+  BooksController.uploadBook,
+);
 
-router.get("/", BooksController.getAllBooks);
+router.get("/getAllBooks", BooksController.getAllBooks);
 
-router.get("/:bookId", BooksController.getBookById);
+router.get("/getBookById/:bookId", BooksController.getBookById);
 
-router.put("/:bookId", BooksController.updateBook);
+router.put("/updateBook/:bookId", BooksController.updateBook);
 
-router.delete("/:bookId", BooksController.deleteBook);
+router.delete("/deleteBook/:bookId", BooksController.deleteBook);
 
 export const BooksRouter = router;
