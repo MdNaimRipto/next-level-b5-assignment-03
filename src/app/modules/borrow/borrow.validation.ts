@@ -8,7 +8,7 @@ const borrowZodSchema = z.object({
     quantity: z.number({
       required_error: "Quantity is Required",
     }),
-    dueDate: z.date({
+    dueDate: z.string({
       required_error: "Due Date is Required",
     }),
   }),

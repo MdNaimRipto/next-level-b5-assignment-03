@@ -19,10 +19,15 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BooksService = void 0;
 const books_schema_1 = require("./books.schema");
 const paginationHelpers_1 = require("../../../helpers/paginationHelpers");
+const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
+const http_status_1 = __importDefault(require("http-status"));
 // upload book
 const uploadBook = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield books_schema_1.Books.create(payload);
@@ -72,6 +77,14 @@ const getBookById = (bookId) => __awaiter(void 0, void 0, void 0, function* () {
 });
 // update book
 const updateBook = (payload, bookId) => __awaiter(void 0, void 0, void 0, function* () {
+    const { copies } = payload;
+    if (copies) {
+        if (copies <= 0) {
+            throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "Cannot Update copies 0 or less then 0");
+        }
+        payload.copies = copies;
+        payload.available = true;
+    }
     const result = yield books_schema_1.Books.findOneAndUpdate({ _id: bookId }, payload, {
         new: true,
     });

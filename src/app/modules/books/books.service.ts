@@ -6,6 +6,8 @@ import {
 import { IBookFilters, IBooks } from "./books.interface";
 import { Books } from "./books.schema";
 import { calculatePaginationFunction } from "../../../helpers/paginationHelpers";
+import ApiError from "../../../errors/ApiError";
+import httpStatus from "http-status";
 
 // upload book
 const uploadBook = async (payload: IBooks): Promise<IBooks | null> => {
@@ -80,6 +82,20 @@ const updateBook = async (
   payload: Partial<IBooks>,
   bookId: string,
 ): Promise<IBooks | null> => {
+  const { copies } = payload;
+
+  if (copies) {
+    if (copies <= 0) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "Cannot Update copies 0 or less then 0",
+      );
+    }
+
+    payload.copies = copies;
+    payload.available = true;
+  }
+
   const result = await Books.findOneAndUpdate({ _id: bookId }, payload, {
     new: true,
   });

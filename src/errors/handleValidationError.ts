@@ -5,7 +5,7 @@ import {
 } from "../interface/error";
 
 const handleValidationError = (
-  error: mongoose.Error.ValidationError
+  error: mongoose.Error.ValidationError,
 ): IGenericErrorResponse => {
   const errors: IGenericErrorMessages[] = Object.values(error.errors).map(
     (el: mongoose.Error.ValidatorError | mongoose.Error.CastError) => {
@@ -13,12 +13,12 @@ const handleValidationError = (
         path: el?.path,
         message: el?.message,
       };
-    }
+    },
   );
   const statusCode = 400;
   return {
     statusCode,
-    message: "Validation Error",
+    message: error.message,
     errorMessages: errors,
   };
 };
